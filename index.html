@@ -71,14 +71,6 @@
     <div id="sidebar">
       <h2>About This Map</h2>
       <p>Welcome to my interactive map! Here you can explore the uploaded GeoJSON files. Click on features to see details.</p>
-      <p>Use the menu below to navigate through the map features or add new data.</p>
-
-      <!-- Placeholder for menu -->
-      <ul>
-        <li>Menu Item 1</li>
-        <li>Menu Item 2</li>
-        <li>Menu Item 3</li>
-      </ul>
     </div>
   </div>
 
@@ -93,9 +85,34 @@
       attribution: 'Tiles © Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
     }).addTo(map);
 
-    // Add a sample marker (optional)
-    const marker = L.marker([51.505, -0.09]).addTo(map);
-    marker.bindPopup("<b>Hello!</b><br>This is a marker popup.").openPopup();
+    // Function to load and display GeoJSON
+    async function loadGeoJSON() {
+      const geojsonPath = './geojson/Test_polygon.geojson'; // the geojson file
+      try {
+        const response = await fetch(geojsonPath);
+        const geojsonData = await response.json();
+
+        // Add GeoJSON to the map with styling and popups
+        L.geoJSON(geojsonData, {
+          style: function (feature) {
+            // Style polygons based on the 'color' property
+            const color = feature.properties.color || 'black'; // Default to black if color is undefined
+            return { color: color, weight: 2 };
+          },
+          onEachFeature: function (feature, layer) {
+            // Bind a popup to each feature with the 'descr' property
+            if (feature.properties && feature.properties.descr) {
+              layer.bindPopup(feature.properties.descr);
+            }
+          }
+        }).addTo(map);
+      } catch (error) {
+        console.error('Error loading GeoJSON:', error);
+      }
+    }
+
+    // Load the GeoJSON when the map is ready
+    loadGeoJSON();
   </script>
 </body>
 </html>
