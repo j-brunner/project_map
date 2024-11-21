@@ -4,42 +4,98 @@
   <title>Interactive Map</title>
   <!-- Include Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
-  <!-- Set basic styles for the page -->
   <style>
+    /* General page styling */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    /* Title section */
+    #header {
+      background-color: #f4f4f4;
+      padding: 10px 20px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    #header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    /* Main content area (map and sidebar) */
+    #main {
+      display: flex;
+      flex: 1;
+    }
+
+    /* Sidebar on the right */
+    #sidebar {
+      width: 300px;
+      padding: 20px;
+      background-color: #f9f9f9;
+      border-left: 1px solid #ddd;
+      box-sizing: border-box;
+    }
+
+    #sidebar h2 {
+      margin-top: 0;
+    }
+
+    #sidebar p {
+      line-height: 1.6;
+    }
+
+    /* Map container */
     #map {
-      width: 100%;
-      height: 100vh; /* Full height of the browser window */
+      flex: 1;
+      height: 100%;
     }
   </style>
 </head>
 <body>
-  <!-- Div to hold the map -->
-  <div id="map"></div>
+  <!-- Title Section -->
+  <div id="header">
+    <h1>My Interactive Map</h1>
+  </div>
+
+  <!-- Main Content Area -->
+  <div id="main">
+    <!-- Map Section -->
+    <div id="map"></div>
+
+    <!-- Sidebar Section -->
+    <div id="sidebar">
+      <h2>About This Map</h2>
+      <p>Welcome to my interactive map! Here you can explore the uploaded GeoJSON files. Click on features to see details.</p>
+      <p>Use the menu below to navigate through the map features or add new data.</p>
+
+      <!-- Placeholder for menu -->
+      <ul>
+        <li>Menu Item 1</li>
+        <li>Menu Item 2</li>
+        <li>Menu Item 3</li>
+      </ul>
+    </div>
+  </div>
 
   <!-- Include Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
   <script>
-    // Initialize the map and set its view to a chosen geographic coordinates and zoom level
-    const map = L.map('map').setView([51.505, -0.09], 13); // [latitude, longitude], zoom level
+    // Initialize the map and set its view
+    const map = L.map('map').setView([51.505, -0.09], 13);
 
-    // Add OpenStreetMap tiles
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: 'Map data © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    // Add Esri World Imagery tiles (satellite basemap)
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Tiles © Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
     }).addTo(map);
 
-    // Add a sample marker (optional, just to show functionality)
+    // Add a sample marker (optional)
     const marker = L.marker([51.505, -0.09]).addTo(map);
-    marker.bindPopup("<b>Hello!</b><br>This is a marker popup.");
-
-    // Add a sample polygon (optional, for demonstration purposes)
-    const polygon = L.polygon([
-      [51.51, -0.1],
-      [51.51, -0.12],
-      [51.5, -0.12]
-    ]).addTo(map);
-    polygon.bindPopup("This is a sample polygon.");
-
-    // You can later add GeoJSON and raster layers here
+    marker.bindPopup("<b>Hello!</b><br>This is a marker popup.").openPopup();
   </script>
 </body>
 </html>
