@@ -77,8 +77,8 @@
   <!-- Include Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
   <script>
-    // Initialize the map and set its view
-    const map = L.map('map').setView([51.505, -0.09], 13);
+    // Initialize the map without setting the view yet
+    const map = L.map('map');
 
     // Add Esri World Imagery tiles (satellite basemap)
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
@@ -87,25 +87,28 @@
 
     // Function to load and display GeoJSON
     async function loadGeoJSON() {
-      const geojsonPath = './geojson/Test_polygon.geojson'; // the geojson file
+      const geojsonPath = './geojson/Test_polygon.geojson'; // The GeoJSON file path
       try {
         const response = await fetch(geojsonPath);
         const geojsonData = await response.json();
 
-        // Add GeoJSON to the map with styling and popups
-        L.geoJSON(geojsonData, {
+        // Create a GeoJSON layer
+        const geojsonLayer = L.geoJSON(geojsonData, {
           style: function (feature) {
             // Style polygons based on the 'color' property
             const color = feature.properties.color || 'black'; // Default to black if color is undefined
             return { color: color, weight: 2 };
           },
           onEachFeature: function (feature, layer) {
-            // Bind a popup to each feature with the 'descr' property
-            if (feature.properties && feature.properties.descr) {
-              layer.bindPopup(feature.properties.descr);
+            // Bind a popup to each feature with the 'Descr' property
+            if (feature.properties && feature.properties.Descr) {
+              layer.bindPopup(feature.properties.Descr);
             }
           }
         }).addTo(map);
+
+        // Fit the map view to the bounds of the GeoJSON layer
+        map.fitBounds(geojsonLayer.getBounds());
       } catch (error) {
         console.error('Error loading GeoJSON:', error);
       }
